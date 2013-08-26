@@ -3,10 +3,22 @@
 # Recipe:: configure
 #
 
-execute "le register --account-key" do
-  command "le register --account-key #{node[:le_api_key]} --name #{node[:applications].keys.first}"
+execute "le init --account-key" do
+  command "le init --account-key #{node[:le_api_key]}"
   action :run
-  not_if { File.exists?('/etc/le/config') } 
+  not_if { File.exists?('/etc/le/config') }
+end
+
+execute "echo ec2eu" do
+  command "echo 'ec2eu=False' >> /etc/le/config"
+  action :run
+  only_if { File.exists?('/etc/le/config') }
+end
+
+execute "le register" do
+  command "le register --name #{node[:applications].keys.first}"
+  action :run
+  only_if { File.exists?('/etc/le/config') } 
 end
 
 follow_paths = [
