@@ -18,7 +18,7 @@ end
 execute "le register" do
   command "le register --name #{node[:applications].keys.first}"
   action :run
-  not_if { File.exists?('/etc/le/config') } 
+  only_if { File.exists?('/etc/le/config') } 
 end
 
 follow_paths = [
